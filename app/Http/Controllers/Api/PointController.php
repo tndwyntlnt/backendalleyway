@@ -164,4 +164,45 @@ class PointController extends Controller
             ], 500);
         }
     }
+
+    public function getActivityHistory(Request $request)
+    {
+        $customerId = Auth::id();
+
+        // 1. Ambil data POIN MASUK (dari tabel orders)
+        $earnedPoints = DB::table('orders')
+            ->select(
+                DB::raw("'Kode Transaksi Di-redeem' as description"), // Deskripsi statis
+                'points_earned as points', // Ambil poin
+                'claimed_at as created_at' // Ambil tanggal klaim
+            )
+            ->where('customer_id', $customerId)
+            ->where('status', 'claimed'); // Hanya yang sudah diklaim
+
+        // 2. Ambil data POIN KELUAR (dari tabel customer_rewards)
+        // Kita perlu JOIN ke tabel 'rewards' untuk dapat nama & poinnya
+        $spentPoints = DB::table('customer_rewards')
+            ->join('rewards', 'customer_rewards.reward_id', '=', 'rewards.id')
+            ->select(
+                // Gabungkan string untuk deskripsi
+                DB::raw("CONCAT('Menukar Hadiah: ', rewards.name) as description"),
+                // Ambil poin dari reward dan JADIKAN NEGATIF
+                DB::raw('rewards.points_required * -1 as points'),
+                'customer_rewards.created_at as created_at' // Ambil tanggal redeem
+            )
+            ->where('customer_rewards.customer_id', $customerId);
+
+        // 3. Gabungkan kedua query (POIN MASUK & POIN KELUAR)
+        $history = $earnedPoints
+            ->union($spentPoints)
+            ->orderBy('created_at', 'desc') // Urutkan berdasarkan tanggal terbaru
+            ->take(20) // Ambil 20 aktivitas terakhir
+            ->get();
+
+        // 4. Kembalikan sebagai JSON
+        return response()->json([
+            'message' => 'Activity history fetched successfully',
+            'data' => $history // 'data' ini penting untuk Flutter
+        ], 200);
+    }
 }

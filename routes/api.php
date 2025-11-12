@@ -13,4 +13,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/redeem-code', [PointController::class, 'redeemCode']);
     Route::get('/rewards', [PointController::class, 'listRewards']);
     Route::post('/rewards/redeem', [PointController::class, 'redeemReward']);
+    Route::get('/activity-history', [PointController::class, 'getActivityHistory']);
 });

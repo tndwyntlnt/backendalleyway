@@ -20,6 +20,7 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Forms\Components\FileUpload;
 
 class RewardResource extends Resource
 {
@@ -37,6 +38,12 @@ class RewardResource extends Resource
                             TextInput::make('name')
                                 ->required()
                                 ->maxLength(255),
+
+                            FileUpload::make('image_url')
+                                ->label('Reward Image')
+                                ->image()
+                                ->disk('public')
+                                ->directory('reward-images'),
 
                             TextInput::make('points_required')
                                 ->label('Points Required')
