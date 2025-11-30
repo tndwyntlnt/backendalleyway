@@ -87,5 +87,5 @@ Ikuti langkah-langkah ini untuk menjalankan proyek di komputer lokal (Localhost)
 
 ### 1. Clone Repositori
 ```bash
-git clone [https://github.com/username-anda/alleyway-backend.git](https://github.com/username-anda/alleyway-backend.git)
+git clone https://github.com/tndwyntlnt/backendalleyway.git
 cd backendalleyway
