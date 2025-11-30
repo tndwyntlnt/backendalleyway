@@ -15,10 +15,12 @@ class CreateOrder extends CreateRecord
     {
         $total = $data['total_amount'] ?? 0;
         $points = floor($total / 20000) * 10; 
-        $data['transaction_code'] = 'ALW-' . strtoupper(Str::random(6));
-        $data['points_earned'] = $points;
-        $data['status'] = 'unclaimed';
 
+        $data['transaction_code'] = 'ALW-' . strtoupper(Str::random(6));
+        $data['points_earned'] = $points;        
+        $data['status'] = 'unclaimed';
+        $data['claimed_at'] = null; 
+        
         return $data;
     }
 }

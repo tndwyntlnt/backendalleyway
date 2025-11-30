@@ -88,6 +88,19 @@ class OrderResource extends Resource
                     ])->columnSpan(2),
 
                     Group::make()->schema([
+                        Section::make('Member Info')
+                            ->description('Pilih member jika ada, kosongkan jika anonim.')
+                            ->schema([
+                                Select::make('customer_id')
+                                    ->label('Cari Member')
+                                    ->relationship('customer', 'name')
+                                    ->searchable() 
+                                    ->preload() 
+                                    ->nullable() 
+                                    ->placeholder('Pilih Nama / No HP')
+                                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->name} ({$record->phone_number})"),
+                            ]),
+
                         Section::make('Transaction Details')->schema([
                             TextInput::make('total_amount')
                                 ->label('Total Amount')

@@ -3,15 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-// Tambahkan ini
 use Illuminate\Foundation\Auth\User as Authenticatable; 
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-// Ubah 'extends Model' menjadi 'extends Authenticatable'
 class Customer extends Authenticatable
 {
-    // Tambahkan HasApiTokens dan Notifiable
     use HasFactory, HasApiTokens, Notifiable;
 
     /**
@@ -23,8 +20,11 @@ class Customer extends Authenticatable
         'name',
         'email',
         'phone_number',
+        'birthday',
         'password',
         'points_balance',
+        'profile_photo_path',
+        'member_status',
     ];
 
     /**
@@ -44,26 +44,34 @@ class Customer extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed', // Otomatis hash password saat dibuat
+        'password' => 'hashed',
     ];
 
-    // RELASI
-    
-    /**
-     * Mendapatkan semua order yang dimiliki oleh customer.
-     */
     public function orders()
     {
-        // 'customer_id' adalah foreign key di tabel 'orders'
         return $this->hasMany(Order::class, 'customer_id');
     }
 
-    /**
-     * Mendapatkan semua riwayat reward yang di-redeem oleh customer.
-     */
     public function customerRewards()
     {
-        // 'customer_id' adalah foreign key di tabel 'customer_rewards'
         return $this->hasMany(CustomerReward::class, 'customer_id');
+    }
+
+    public function upgradeMemberStatus()
+    {
+        $points = $this->points_balance;
+        $newStatus = 'Bronze';
+
+        if ($points >= 1500) {
+            $newStatus = 'Gold';
+        } elseif ($points >= 500) {
+            $newStatus = 'Silver';
+        } else {
+            $newStatus = 'Bronze';
+        }
+
+        if ($this->member_status !== $newStatus) {
+            $this->update(['member_status' => $newStatus]);
+        }
     }
 }

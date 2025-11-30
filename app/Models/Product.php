@@ -26,15 +26,8 @@ class Product extends Model
         'is_active' => 'boolean',
     ];
 
-
-    // RELASI
-
-    /**
-     * Mendapatkan semua riwayat item order yang terkait dengan produk ini.
-     */
     public function orderItems()
     {
-        // 'product_id' adalah foreign key di tabel 'order_items'
         return $this->hasMany(OrderItem::class, 'product_id');
     }
 }

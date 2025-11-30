@@ -26,14 +26,8 @@ class Reward extends Model
         'is_active' => 'boolean',
     ];
 
-    // RELASI
-
-    /**
-     * Mendapatkan semua riwayat redeem yang terkait dengan reward ini.
-     */
     public function customerRewards()
     {
-        // 'reward_id' adalah foreign key di tabel 'customer_rewards'
         return $this->hasMany(CustomerReward::class, 'reward_id');
     }
 }

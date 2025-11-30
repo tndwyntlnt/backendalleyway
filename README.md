@@ -1,66 +1,154 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ☕ Alleyway Muse - Backend API & Admin Panel
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Alleyway Muse Backend** adalah sistem manajemen loyalitas (*loyalty membership*) yang dirancang khusus untuk operasional kedai kopi modern. Proyek ini dibangun menggunakan **Laravel 11** dan berfungsi sebagai penyedia layanan RESTful API untuk aplikasi mobile (Flutter), sekaligus menyediakan Dashboard Admin yang kuat berbasis **FilamentPHP**.
 
-## About Laravel
+Sistem ini menangani siklus hidup pelanggan mulai dari registrasi, transaksi pembelian, akumulasi poin, kenaikan level keanggotaan (Bronze/Silver/Gold), hingga penukaran hadiah.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🛠️ Teknologi Utama
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Proyek ini dibangun di atas fondasi teknologi yang solid dan modern:
 
-## Learning Laravel
+* **Framework:** Laravel 11.x
+* **Admin Panel:** FilamentPHP v3
+* **Database:** MySQL
+* **Authentication:** Laravel Sanctum (Token-based API)
+* **Email Service:** SMTP (Gmail)
+* **Asset Management:** Local Storage Symlink
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## ✨ Fitur & Fungsionalitas
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 📱 1. Fitur Mobile API (Untuk Pelanggan)
+Backend ini menyediakan endpoint lengkap untuk aplikasi Flutter:
 
-## Laravel Sponsors
+* **Autentikasi Aman:** Login, Register, Logout, dan Reset Password (OTP via Email) menggunakan Laravel Sanctum.
+* **Sistem Poin & Leveling:**
+    * **Redeem Code:** Pelanggan mendapatkan poin dengan memasukkan kode unik yang tertera pada struk transaksi.
+    * **Auto Tiering:** Sistem otomatis menaikkan status member (Bronze → Silver → Gold) saat poin mencapai ambang batas tertentu.
+* **Dompet Digital:**
+    * **Rewards Catalog:** Menampilkan daftar hadiah yang bisa ditukar.
+    * **My Rewards:** Menyimpan voucher *rewards* hadiah yang dimiliki user (beserta status kadaluwarsa).
+* **Riwayat Aktivitas:** Mencatat semua *history* poin masuk (transaksi) dan poin keluar (penukaran hadiah) secara kronologis.
+* **Promo & Banner:** Menampilkan informasi promo spesial ("Buy 1 Get 1", "Diskon", dll).
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 🖥️ 2. Fitur Admin Dashboard (Untuk Kasir/Owner)
+Panel admin Filament digunakan untuk manajemen operasional sehari-hari:
 
-### Premium Partners
+* **Manajemen Pesanan (Order):**
+    * Membuat pesanan baru untuk pelanggan.
+    * Opsi menetapkan pesanan ke member terdaftar atau anonim.
+    * Generate kode transaksi unik (`ALW-XXXXXX`) untuk klaim poin mandiri.
+* **Manajemen Produk & Hadiah:** CRUD (Create, Read, Update, Delete) lengkap untuk menu kopi dan item hadiah.
+* **Manajemen Pelanggan:** Memantau data member, saldo poin, dan riwayat transaksi.
+* **Validasi Voucher:** Fitur untuk kasir menandai voucher milik pelanggan sebagai **"Terpakai" (Used)** saat ditukarkan di toko.
+* **Manajemen Promo:** Mengatur banner promo yang tampil di aplikasi mobile.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+---
 
-## Contributing
+## 📚 Dokumentasi API Ringkas
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Berikut adalah daftar endpoint utama yang tersedia. Semua request ke endpoint yang dilindungi (*Protected*) wajib menyertakan Header: `Authorization: Bearer <token>`.
 
-## Code of Conduct
+### 🔐 Authentication
+| Method | Endpoint | Deskripsi |
+| :--- | :--- | :--- |
+| `POST` | `/api/register` | Mendaftar akun member baru |
+| `POST` | `/api/login` | Masuk dan mendapatkan Token Akses |
+| `POST` | `/api/forgot-password` | Request token reset password ke email |
+| `POST` | `/api/verify-token` | Verifikasi validitas token reset |
+| `POST` | `/api/reset-password` | Mengubah password baru |
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 👤 User Profile (Protected)
+| Method | Endpoint | Deskripsi |
+| :--- | :--- | :--- |
+| `GET` | `/api/profile` | Mendapatkan data profil, poin, dan status member |
+| `POST` | `/api/profile/update` | Update nama, telepon, tgl lahir, dan foto profil |
+| `POST` | `/api/change-password` | Mengganti password (user login) |
+| `POST` | `/api/logout` | Menghapus token akses (Keluar) |
 
-## Security Vulnerabilities
+### 💎 Loyalty Features (Protected)
+| Method | Endpoint | Deskripsi |
+| :--- | :--- | :--- |
+| `POST` | `/api/redeem-code` | Input kode transaksi untuk klaim poin |
+| `GET` | `/api/rewards` | Melihat katalog hadiah yang tersedia |
+| `POST` | `/api/rewards/redeem` | Menukar poin dengan hadiah tertentu |
+| `GET` | `/api/my-rewards` | Melihat daftar voucher aktif milik user |
+| `GET` | `/api/promos` | Melihat daftar promo spesial |
+| `GET` | `/api/notifications` | Melihat riwayat aktivitas (Struk & Redeem) |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 🚀 Instalasi & Konfigurasi
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Ikuti langkah-langkah ini untuk menjalankan proyek di komputer lokal (Localhost).
+
+### 1. Clone Repositori
+```bash
+git clone https://github.com/tndwyntlnt/backendalleyway.git
+cd backendalleyway
+```
+
+### 2. Install Dependencies
+Pastikan Anda memiliki Composer dan PHP versi 8.2+.
+```bash
+composer install
+```
+
+### 3. Konfigurasi Environment
+Duplikasi file contoh .env dan sesuaikan dengan konfigurasi database lokal Anda.
+```bash
+cp .env.example .env
+```
+Buka file .env dan atur koneksi database:
+```bash
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=nama_database_anda
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### 4. Generate Application Key
+```bash
+php artisan key:generate
+```
+
+### 5. Migrasi Database
+Jalankan perintah ini untuk membuat semua tabel yang diperlukan.
+```bash
+php artisan migrate
+```
+
+### 6. Setup Storage (Penting untuk Gambar)
+Agar gambar produk dan promo bisa diakses publik, buat symbolic link:
+```bash
+php artisan storage:link
+```
+
+### 7. Buat Akun Admin
+Buat akun untuk login ke dashboard Filament.
+```bash
+php artisan make:filament-user
+```
+
+### 8. Jalankan Server
+```bash
+php artisan serve
+```
+
+### 📧 Konfigurasi Email (Opsional)
+Fitur Lupa Password memerlukan konfigurasi SMTP. Untuk pengembangan lokal, disarankan menggunakan Mailtrap atau Gmail App Password.
+Contoh konfigurasi .env untuk Gmail:
+```bash
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=email_anda@gmail.com
+MAIL_PASSWORD=app_password_16_digit
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="no-reply@alleyway.com"
+```

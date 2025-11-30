@@ -33,9 +33,7 @@ class ProductResource extends Resource
     {
         return $form
             ->schema([
-                // Layout utama
                 Grid::make(3)->schema([
-                    // Kolom Kiri (Konten Utama)
                     Group::make()->schema([
                         Section::make('Product Details')->schema([
                             TextInput::make('name')
@@ -53,13 +51,12 @@ class ProductResource extends Resource
                         ])
                     ])->columnSpan(2),
 
-                    // Kolom Kanan (Sidebar)
                     Group::make()->schema([
                         Section::make('Image & Status')->schema([
                             FileUpload::make('image_url')
                                 ->label('Product Image')
                                 ->image()
-                                ->disk('public') // Kita akan atur ini
+                                ->disk('public')
                                 ->directory('product-images'),
 
                             Toggle::make('is_active')

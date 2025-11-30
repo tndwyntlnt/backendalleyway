@@ -27,23 +27,13 @@ class Order extends Model
         'claimed_at' => 'datetime',
     ];
 
-    // RELASI
-
-    /**
-     * Mendapatkan customer yang meng-klaim order ini.
-     */
     public function customer()
     {
-        // 'customer_id' adalah foreign key di tabel ini ('orders')
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
-    /**
-     * Mendapatkan semua item di dalam order ini.
-     */
     public function orderItems()
     {
-        // 'order_id' adalah foreign key di tabel 'order_items'
         return $this->hasMany(OrderItem::class, 'order_id');
     }
 }

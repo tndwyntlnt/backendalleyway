@@ -26,23 +26,13 @@ class CustomerReward extends Model
     ];
 
 
-    // RELASI
-
-    /**
-     * Mendapatkan customer pemilik redeem ini.
-     */
     public function customer()
     {
-        // 'customer_id' adalah foreign key di tabel ini
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
-    /**
-     * Mendapatkan data reward yang di-redeem.
-     */
     public function reward()
     {
-        // 'reward_id' adalah foreign key di tabel ini
         return $this->belongsTo(Reward::class, 'reward_id');
     }
 }
