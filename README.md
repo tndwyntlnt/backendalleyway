@@ -13,11 +13,10 @@ Backend ini menangani seluruh logika bisnis mulai dari manajemen pengguna, perhi
 
 ## 📸 Admin Dashboard Preview
 
-_(Ganti bagian ini dengan screenshot dashboard Filament kamu, misal: halaman Dashboard utama dan halaman Order)_
 
 |                          Dashboard Overview                          |                       Order Management                        |
 | :------------------------------------------------------------------: | :-----------------------------------------------------------: |
-| ![Dashboard](https://placehold.co/600x400?text=Dashboard+Screenshot) | ![Orders](https://placehold.co/600x400?text=Order+Screenshot) |
+| ![Dashboard](https://drive.google.com/file/d/1_p4gxh2erOxthAD2kOMzy0_8EWaIcoKF/view?usp=sharing) | ![Orders](https://drive.google.com/file/d/1I6IsVGwZxEmQ8q6o2LVv_EnatZ52ap5C/view?usp=sharing) |
 
 ---
 
