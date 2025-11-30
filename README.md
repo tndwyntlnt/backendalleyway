@@ -1,182 +1,91 @@
 # ☕ Alleyway Muse - Backend API & Admin Panel
 
-![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=for-the-badge&logo=laravel)
-![Filament](https://img.shields.io/badge/Filament-v3-F28D15?style=for-the-badge&logo=php)
-![MySQL](https://img.shields.io/badge/Database-MySQL-005C84?style=for-the-badge&logo=mysql)
-![Sanctum](https://img.shields.io/badge/Auth-Sanctum-shield?style=for-the-badge)
+**Alleyway Muse Backend** adalah sistem manajemen loyalitas (*loyalty membership*) yang dirancang khusus untuk operasional kedai kopi modern. Proyek ini dibangun menggunakan **Laravel 11** dan berfungsi sebagai penyedia layanan RESTful API untuk aplikasi mobile (Flutter), sekaligus menyediakan Dashboard Admin yang kuat berbasis **FilamentPHP**.
 
-**Alleyway Muse Backend** adalah sistem manajemen loyalitas dan _membership_ modern yang dibangun khusus untuk _coffee shop_. Proyek ini berfungsi sebagai **RESTful API** untuk aplikasi mobile (Flutter) dan menyediakan **Admin Dashboard** yang kuat untuk manajemen operasional.
-
-Backend ini menangani seluruh logika bisnis mulai dari manajemen pengguna, perhitungan poin otomatis, penukaran hadiah, hingga manajemen promo marketing.
+Sistem ini menangani siklus hidup pelanggan mulai dari registrasi, transaksi pembelian, akumulasi poin, kenaikan level keanggotaan (Bronze/Silver/Gold), hingga penukaran hadiah.
 
 ---
 
-## 📸 Admin Dashboard Preview
+## 🛠️ Teknologi Utama
 
-_(Ganti bagian ini dengan screenshot dashboard Filament kamu, misal: halaman Dashboard utama dan halaman Order)_
+Proyek ini dibangun di atas fondasi teknologi yang solid dan modern:
 
-|                          Dashboard Overview                          |                       Order Management                        |
-| :------------------------------------------------------------------: | :-----------------------------------------------------------: |
-| ![Dashboard](c:\Users\tndwy\Pictures\Screenshots\Screenshot 2025-11-30 114318.png) | ![Orders](c:\Users\tndwy\Pictures\Screenshots\Screenshot 2025-11-30 114619.png) |
-
----
-
-## ✨ Fitur Utama
-
-### 📱 Untuk Aplikasi Mobile (API)
-
--   **Secure Authentication:** Login, Register, Logout, dan Forgot Password (OTP via Email) menggunakan **Laravel Sanctum**.
--   **Loyalty System:**
-    -   **Redeem Code:** User menginput kode unik dari struk untuk mendapatkan poin.
-    -   **Leveling Otomatis:** Sistem otomatis menaikkan status member (Bronze, Silver, Gold) berdasarkan capaian poin.
--   **Rewards Marketplace:** Katalog penukaran poin dengan _merchandise_ atau menu gratis.
--   **My Voucher:** Manajemen voucher hadiah yang dimiliki user (status: _unclaimed_, _used_, _expired_).
--   **Digital Receipt & History:** Riwayat aktivitas lengkap (poin masuk & keluar) yang digabung secara kronologis.
--   **Promo & Banner:** Menampilkan promo spesial yang diatur dari admin.
-
-### 🖥️ Untuk Admin (Filament Panel)
-
--   **CRUD Produk & Reward:** Manajemen menu kopi dan hadiah penukaran.
--   **Order Management:**
-    -   Membuat pesanan baru (Kasir).
-    -   Pilihan untuk menetapkan pesanan ke member tertentu atau anonim.
-    -   Generate kode transaksi unik otomatis.
--   **Customer Management:** Melihat profil member, riwayat transaksi, dan saldo poin.
--   **Promo Management:** Upload banner dan deskripsi promo untuk aplikasi.
--   **Validasi Voucher:** Menandai voucher milik user sebagai "Terpakai" (_Mark as Used_).
+* **Framework:** Laravel 11.x
+* **Admin Panel:** FilamentPHP v3
+* **Database:** MySQL / MariaDB
+* **Authentication:** Laravel Sanctum (Token-based API)
+* **Email Service:** SMTP (Gmail / Mailtrap)
+* **Asset Management:** Local Storage Symlink
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
+## ✨ Fitur & Fungsionalitas
 
--   **Framework:** [Laravel 11](https://laravel.com/)
--   **Admin Panel:** [FilamentPHP v3](https://filamentphp.com/)
--   **Database:** MySQL / MariaDB
--   **Authentication:** Laravel Sanctum
--   **Email Service:** SMTP (Gmail / Mailtrap)
--   **Storage:** Local Storage (Symlink)
+### 📱 1. Fitur Mobile API (Untuk Pelanggan)
+Backend ini menyediakan endpoint lengkap untuk aplikasi Flutter:
 
----
+* **Autentikasi Aman:** Login, Register, Logout, dan Reset Password (OTP via Email) menggunakan Laravel Sanctum.
+* **Sistem Poin & Leveling:**
+    * **Redeem Code:** Pelanggan mendapatkan poin dengan memasukkan kode unik yang tertera pada struk transaksi.
+    * **Auto Tiering:** Sistem otomatis menaikkan status member (Bronze → Silver → Gold) saat poin mencapai ambang batas tertentu.
+* **Dompet Digital:**
+    * **Rewards Catalog:** Menampilkan daftar hadiah yang bisa ditukar.
+    * **My Vouchers:** Menyimpan voucher hadiah yang dimiliki user (beserta status kadaluwarsa).
+* **Riwayat Aktivitas:** Mencatat semua *history* poin masuk (transaksi) dan poin keluar (penukaran hadiah) secara kronologis.
+* **Promo & Banner:** Menampilkan informasi promo spesial ("Buy 1 Get 1", "Diskon", dll).
 
-## 🚀 Instalasi & Setup
+### 🖥️ 2. Fitur Admin Dashboard (Untuk Kasir/Owner)
+Panel admin Filament digunakan untuk manajemen operasional sehari-hari:
 
-Ikuti langkah-langkah berikut untuk menjalankan proyek ini di komputer lokal Anda.
-
-### Prasyarat
-
--   PHP >= 8.2
--   Composer
--   MySQL
-
-### Langkah-langkah
-
-1.  **Clone Repository**
-
-    ```bash
-    git clone [https://github.com/username-anda/alleyway-backend.git](https://github.com/username-anda/alleyway-backend.git)
-    cd alleyway-backend
-    ```
-
-2.  **Install Dependencies**
-
-    ```bash
-    composer install
-    ```
-
-3.  **Setup Environment (.env)**
-    Salin file contoh `.env` dan konfigurasi database Anda.
-
-    ```bash
-    cp .env.example .env
-    ```
-
-    _Buka file `.env` dan sesuaikan `DB_DATABASE`, `DB_USERNAME`, dan `DB_PASSWORD`._
-
-4.  **Generate App Key**
-
-    ```bash
-    php artisan key:generate
-    ```
-
-5.  **Migrasi Database**
-    Jalankan migrasi untuk membuat tabel.
-
-    ```bash
-    php artisan migrate
-    ```
-
-6.  **Setup Storage Link**
-    Wajib dilakukan agar gambar produk/promo bisa diakses publik.
-
-    ```bash
-    php artisan storage:link
-    ```
-
-7.  **Buat Akun Admin**
-    Buat akun untuk login ke dashboard Filament.
-
-    ```bash
-    php artisan make:filament-user
-    ```
-
-8.  **Jalankan Server**
-    ```bash
-    php artisan serve
-    ```
-    _Backend akan berjalan di `http://127.0.0.1:8000` (atau gunakan `--host` untuk akses jaringan)._
+* **Manajemen Pesanan (Order):**
+    * Membuat pesanan baru untuk pelanggan.
+    * Opsi menetapkan pesanan ke member terdaftar atau anonim.
+    * Generate kode transaksi unik (`ALW-XXXXXX`) untuk klaim poin mandiri.
+* **Manajemen Produk & Hadiah:** CRUD (Create, Read, Update, Delete) lengkap untuk menu kopi dan item hadiah.
+* **Manajemen Pelanggan:** Memantau data member, saldo poin, dan riwayat transaksi.
+* **Validasi Voucher:** Fitur untuk kasir menandai voucher milik pelanggan sebagai **"Terpakai" (Used)** saat ditukarkan di toko.
+* **Manajemen Promo:** Mengatur banner promo yang tampil di aplikasi mobile.
 
 ---
 
-## 📚 Dokumentasi API
+## 📚 Dokumentasi API Ringkas
 
-Berikut adalah daftar _endpoint_ utama yang tersedia untuk aplikasi Frontend.
+Berikut adalah daftar endpoint utama yang tersedia. Semua request ke endpoint yang dilindungi (*Protected*) wajib menyertakan Header: `Authorization: Bearer <token>`.
 
-### Authentication
-
-| Method | Endpoint               | Deskripsi                             |
-| :----- | :--------------------- | :------------------------------------ |
-| `POST` | `/api/register`        | Mendaftar akun member baru            |
-| `POST` | `/api/login`           | Masuk dan mendapatkan Token Bearer    |
+### 🔐 Authentication
+| Method | Endpoint | Deskripsi |
+| :--- | :--- | :--- |
+| `POST` | `/api/register` | Mendaftar akun member baru |
+| `POST` | `/api/login` | Masuk dan mendapatkan Token Akses |
 | `POST` | `/api/forgot-password` | Request token reset password ke email |
-| `POST` | `/api/verify-token`    | Verifikasi token reset password       |
-| `POST` | `/api/reset-password`  | Mengubah password dengan token        |
+| `POST` | `/api/verify-token` | Verifikasi validitas token reset |
+| `POST` | `/api/reset-password` | Mengubah password baru |
 
-### User & Profile (Protected)
+### 👤 User Profile (Protected)
+| Method | Endpoint | Deskripsi |
+| :--- | :--- | :--- |
+| `GET` | `/api/profile` | Mendapatkan data profil, poin, dan status member |
+| `POST` | `/api/profile/update` | Update nama, telepon, tgl lahir, dan foto profil |
+| `POST` | `/api/change-password` | Mengganti password (user login) |
+| `POST` | `/api/logout` | Menghapus token akses (Keluar) |
 
-_Header: `Authorization: Bearer <token>`_
-
-| Method | Endpoint               | Deskripsi                                |
-| :----- | :--------------------- | :--------------------------------------- |
-| `GET`  | `/api/profile`         | Mendapatkan data user (Poin, Level, dll) |
-| `POST` | `/api/profile/update`  | Update nama, telepon, tgl lahir, foto    |
-| `POST` | `/api/change-password` | Ganti password (user login)              |
-| `POST` | `/api/logout`          | Hapus token akses                        |
-
-### Features (Protected)
-
-| Method | Endpoint              | Deskripsi                              |
-| :----- | :-------------------- | :------------------------------------- |
-| `POST` | `/api/redeem-code`    | Input kode transaksi untuk dapat poin  |
-| `GET`  | `/api/rewards`        | List katalog hadiah                    |
-| `POST` | `/api/rewards/redeem` | Menukar poin dengan hadiah             |
-| `GET`  | `/api/my-rewards`     | List voucher hadiah milik user (Aktif) |
-| `GET`  | `/api/promos`         | List banner promo spesial              |
-| `GET`  | `/api/notifications`  | Riwayat aktivitas (Struk & Redeem)     |
+### 💎 Loyalty Features (Protected)
+| Method | Endpoint | Deskripsi |
+| :--- | :--- | :--- |
+| `POST` | `/api/redeem-code` | Input kode transaksi untuk klaim poin |
+| `GET` | `/api/rewards` | Melihat katalog hadiah yang tersedia |
+| `POST` | `/api/rewards/redeem` | Menukar poin dengan hadiah tertentu |
+| `GET` | `/api/my-rewards` | Melihat daftar voucher aktif milik user |
+| `GET` | `/api/promos` | Melihat daftar promo spesial |
+| `GET` | `/api/notifications` | Melihat riwayat aktivitas (Struk & Redeem) |
 
 ---
 
-## 🧪 Pengujian Email (Mailtrap/Gmail)
+## 🚀 Instalasi & Konfigurasi
 
-Untuk fitur **Forgot Password**, pastikan Anda telah mengonfigurasi SMTP di file `.env`.
+Ikuti langkah-langkah ini untuk menjalankan proyek di komputer lokal (Localhost).
 
-Contoh konfigurasi menggunakan **Gmail App Password**:
-
-```env
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USERNAME=email_anda@gmail.com
-MAIL_PASSWORD=password_aplikasi_16_digit
-MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS="no-reply@alleyway.com"
-```
+### 1. Clone Repositori
+```bash
+git clone [https://github.com/username-anda/alleyway-backend.git](https://github.com/username-anda/alleyway-backend.git)
+cd alleyway-backend
