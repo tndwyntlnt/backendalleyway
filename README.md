@@ -89,3 +89,66 @@ Ikuti langkah-langkah ini untuk menjalankan proyek di komputer lokal (Localhost)
 ```bash
 git clone https://github.com/tndwyntlnt/backendalleyway.git
 cd backendalleyway
+```
+
+### 2. Install Dependencies
+Pastikan Anda memiliki Composer dan PHP versi 8.2+.
+```bash
+composer install
+```
+
+### 3. Konfigurasi Environment
+Duplikasi file contoh .env dan sesuaikan dengan konfigurasi database lokal Anda.
+```bash
+cp .env.example .env
+```
+Buka file .env dan atur koneksi database:
+```bash
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=nama_database_anda
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### 4. Generate Application Key
+```bash
+php artisan key:generate
+```
+
+### 5. Migrasi Database
+Jalankan perintah ini untuk membuat semua tabel yang diperlukan.
+```bash
+php artisan migrate
+```
+
+### 6. Setup Storage (Penting untuk Gambar)
+Agar gambar produk dan promo bisa diakses publik, buat symbolic link:
+```bash
+php artisan storage:link
+```
+
+### 7. Buat Akun Admin
+Buat akun untuk login ke dashboard Filament.
+```bash
+php artisan make:filament-user
+```
+
+### 8. Jalankan Server
+```bash
+php artisan serve
+```
+
+### 📧 Konfigurasi Email (Opsional)
+Fitur Lupa Password memerlukan konfigurasi SMTP. Untuk pengembangan lokal, disarankan menggunakan Mailtrap atau Gmail App Password.
+Contoh konfigurasi .env untuk Gmail:
+```bash
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=email_anda@gmail.com
+MAIL_PASSWORD=app_password_16_digit
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="no-reply@alleyway.com"
+```
