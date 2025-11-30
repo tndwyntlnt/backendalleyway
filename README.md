@@ -12,9 +12,9 @@ Proyek ini dibangun di atas fondasi teknologi yang solid dan modern:
 
 * **Framework:** Laravel 11.x
 * **Admin Panel:** FilamentPHP v3
-* **Database:** MySQL / MariaDB
+* **Database:** MySQL
 * **Authentication:** Laravel Sanctum (Token-based API)
-* **Email Service:** SMTP (Gmail / Mailtrap)
+* **Email Service:** SMTP (Gmail)
 * **Asset Management:** Local Storage Symlink
 
 ---
@@ -30,7 +30,7 @@ Backend ini menyediakan endpoint lengkap untuk aplikasi Flutter:
     * **Auto Tiering:** Sistem otomatis menaikkan status member (Bronze → Silver → Gold) saat poin mencapai ambang batas tertentu.
 * **Dompet Digital:**
     * **Rewards Catalog:** Menampilkan daftar hadiah yang bisa ditukar.
-    * **My Vouchers:** Menyimpan voucher hadiah yang dimiliki user (beserta status kadaluwarsa).
+    * **My Rewards:** Menyimpan voucher *rewards* hadiah yang dimiliki user (beserta status kadaluwarsa).
 * **Riwayat Aktivitas:** Mencatat semua *history* poin masuk (transaksi) dan poin keluar (penukaran hadiah) secara kronologis.
 * **Promo & Banner:** Menampilkan informasi promo spesial ("Buy 1 Get 1", "Diskon", dll).
 
@@ -88,4 +88,4 @@ Ikuti langkah-langkah ini untuk menjalankan proyek di komputer lokal (Localhost)
 ### 1. Clone Repositori
 ```bash
 git clone [https://github.com/username-anda/alleyway-backend.git](https://github.com/username-anda/alleyway-backend.git)
-cd alleyway-backend
+cd backendalleyway
