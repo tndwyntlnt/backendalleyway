@@ -1,3 +1,14 @@
+## 👥 Anggota Tim
+Berikut adalah kontributor yang bekerja dalam pengembangan proyek ini:
+
+|Nama| NIM | GitHub |
+| :--- | :---: | :--- |
+| **Christy Jones** | 535240070 | [GitHub](https://github.com/christyjns) |
+| **Vanesa Yolanda** | 535240071 | [GitHub](https://github.com/nesa28) |
+| **Cathrine Sandrina** | 535240075 | [GitHub](https://github.com/Einnyboi) |
+| **Tandwiyan Talenta** | 535240176 | [GitHub](https://github.com/tndwyntlnt) |
+| **Naisya Yuen Ra’af** | 535240187 | [GitHub](https://github.com/itsyuenai) |
+
 # ☕ Alleyway Muse - Backend API & Admin Panel
 
 **Alleyway Muse Backend** adalah sistem manajemen loyalitas (*loyalty membership*) yang dirancang khusus untuk operasional kedai kopi modern. Proyek ini dibangun menggunakan **Laravel 11** dan berfungsi sebagai penyedia layanan RESTful API untuk aplikasi mobile (Flutter), sekaligus menyediakan Dashboard Admin yang kuat berbasis **FilamentPHP**.
