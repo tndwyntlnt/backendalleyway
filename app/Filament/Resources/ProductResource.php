@@ -56,8 +56,9 @@ class ProductResource extends Resource
                             FileUpload::make('image_url')
                                 ->label('Product Image')
                                 ->image()
-                                ->disk('public')
-                                ->directory('product-images'),
+                                ->disk('s3')
+                                ->directory('products')
+                                ->visibility('public'),
 
                             Toggle::make('is_active')
                                 ->label('Active')

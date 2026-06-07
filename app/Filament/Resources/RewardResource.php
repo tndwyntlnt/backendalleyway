@@ -42,8 +42,9 @@ class RewardResource extends Resource
                             FileUpload::make('image_url')
                                 ->label('Reward Image')
                                 ->image()
-                                ->disk('public')
-                                ->directory('reward-images'),
+                                ->disk('s3')
+                                ->directory('rewards')
+                                ->visibility('public'),
 
                             TextInput::make('points_required')
                                 ->label('Points Required')

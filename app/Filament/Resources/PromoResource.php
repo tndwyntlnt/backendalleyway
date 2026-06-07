@@ -32,8 +32,9 @@ class PromoResource extends Resource
                 FileUpload::make('image_url')
                     ->label('Promo Banner')
                     ->image()
-                    ->disk('public')
-                    ->directory('promo-images'),
+                    ->disk('s3')
+                    ->directory('promos')
+                    ->visibility('public'),
                     
                 Textarea::make('description'),
                 
