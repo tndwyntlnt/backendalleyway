@@ -43,7 +43,9 @@ class PasswordResetController extends Controller
             return response()->json(['message' => 'Reset token sent to your email.'], 200);
 
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to send email.', 'error' => $e->getMessage()], 500);
+            return response()->json([
+                'message' => 'Gagal mengirim kode reset password. Silakan coba lagi nanti.',
+            ], 500);
         }
     }
 
@@ -56,7 +58,10 @@ class PasswordResetController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json([
+                'message' => 'Data yang kamu masukkan belum valid.',
+                'errors' => $validator->errors(),
+            ], 422);
         }
 
         $resetRecord = DB::table('password_reset_tokens')
@@ -91,7 +96,10 @@ class PasswordResetController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json([
+                'message' => 'Data yang kamu masukkan belum valid.',
+                'errors' => $validator->errors(),
+            ], 422);
         }
 
         $exists = DB::table('password_reset_tokens')

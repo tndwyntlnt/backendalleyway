@@ -67,7 +67,10 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json([
+                'message' => 'Data yang kamu masukkan belum valid.',
+                'errors' => $validator->errors(),
+            ], 422);
         }
 
         $customer = Customer::where('email', $request->email)->first();
@@ -170,7 +173,10 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json([
+                'message' => 'Data yang kamu masukkan belum valid.',
+                'errors' => $validator->errors(),
+            ], 422);
         }
 
         if (!Hash::check($request->current_password, $user->password)) {

@@ -24,7 +24,10 @@ class PointController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json([
+                'message' => 'Data yang kamu masukkan belum valid.',
+                'errors' => $validator->errors(),
+            ], 422);
         }
 
         $customer = Auth::user();
@@ -72,8 +75,7 @@ class PointController extends Controller
 
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'An error occurred during redemption. Please try again.',
-                'error' => $e->getMessage()
+                'message' => 'Terjadi kendala saat memproses penukaran. Silakan coba lagi.',
             ], 500);
         }
     }
@@ -101,7 +103,10 @@ class PointController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json([
+                'message' => 'Data yang kamu masukkan belum valid.',
+                'errors' => $validator->errors(),
+            ], 422);
         }
 
         $customer = Auth::user();
@@ -145,8 +150,7 @@ class PointController extends Controller
 
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'An error occurred during redemption. Please try again.',
-                'error' => $e->getMessage()
+                'message' => 'Terjadi kendala saat memproses penukaran. Silakan coba lagi.',
             ], 500);
         }
     }
