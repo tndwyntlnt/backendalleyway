@@ -11,6 +11,7 @@ use App\Models\Order;
 use App\Models\Reward;
 use App\Models\CustomerReward;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class PointController extends Controller
 {
@@ -80,8 +81,12 @@ class PointController extends Controller
     public function listRewards(Request $request)
     {
         $rewards = Reward::where('is_active', true)
-                         ->orderBy('points_required', 'asc')
-                         ->get();
+            ->orderBy('points_required', 'asc')
+            ->get()
+            ->map(function ($reward) {
+                $reward->image_url = $this->resolveImageUrl($reward->image_url);
+                return $reward;
+            });
 
         return response()->json([
             'message' => 'Rewards fetched successfully',
@@ -186,14 +191,36 @@ class PointController extends Controller
 
         $myRewards = CustomerReward::with('reward')
             ->where('customer_id', $user->id)
-            ->where('status', 'unclaimed') 
+            ->where('status', 'unclaimed')
             ->where('expires_at', '>', Carbon::now())
-            ->orderBy('expires_at', 'asc') 
-            ->get();
+            ->orderBy('expires_at', 'asc')
+            ->get()
+            ->map(function ($customerReward) {
+                if ($customerReward->reward) {
+                    $customerReward->reward->image_url = $this->resolveImageUrl(
+                        $customerReward->reward->image_url
+                    );
+                }
+
+                return $customerReward;
+            });
 
         return response()->json([
             'message' => 'My rewards fetched successfully',
             'data' => $myRewards
         ], 200);
+    }
+
+    private function resolveImageUrl(?string $path): ?string
+    {
+        if (!$path) {
+            return null;
+        }
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        return Storage::disk('s3')->url($path);
     }
 }
