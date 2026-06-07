@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\PointController;
 use App\Http\Controllers\Api\PromoController;
 use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\HomeController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -25,4 +26,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/my-rewards', [PointController::class, 'myRewards']);
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::post('/change-password', [AuthController::class, 'changePassword']);
+    Route::get('/home', [HomeController::class, 'index']);
 });
