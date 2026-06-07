@@ -8,6 +8,7 @@ use App\Models\Customer;
 use Illuminate\Support\Facades\Hash; 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -31,6 +32,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'phone_number' => $request->phone,
             'birthday' => $request->birthday,
+            'member_code' => $this->generateMemberCode(),
         ]);
 
         $token = $customer->createToken('flutterApp')->plainTextToken;
@@ -172,5 +174,14 @@ class AuthController extends Controller
         }
 
         return Storage::disk('s3')->url($path);
+    }
+
+    private function generateMemberCode(): string
+    {
+        do {
+            $code = 'ALW-' . strtoupper(Str::random(6));
+        } while (Customer::where('member_code', $code)->exists());
+
+        return $code;
     }
 }

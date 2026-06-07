@@ -25,6 +25,7 @@ class Customer extends Authenticatable
         'points_balance',
         'profile_photo_path',
         'member_status',
+        'member_code',
     ];
 
     /**
