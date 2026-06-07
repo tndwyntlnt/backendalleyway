@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Customer; 
 use Illuminate\Support\Facades\Hash; 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
@@ -72,10 +73,14 @@ class AuthController extends Controller
 
     public function profile(Request $request)
     {
-        
+        $customer = $request->user();
+        $customer->profile_photo_path = $this->resolveProfilePhotoUrl(
+            $customer->profile_photo_path
+        );
+
         return response()->json([
             'message' => 'Profile fetched successfully',
-            'customer' => $request->user()
+            'customer' => $customer
         ], 200);
     }
 
@@ -97,7 +102,7 @@ class AuthController extends Controller
 
         $path = $user->profile_photo_path;
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('profile-photos', 'public');
+            $path = $request->file('photo')->store('profile-photos', 's3');
         }
 
         $user->update([
@@ -107,6 +112,10 @@ class AuthController extends Controller
             'birthday' => $request->birthday,
             'profile_photo_path' => $path,
         ]);
+
+        $user->profile_photo_path = $this->resolveProfilePhotoUrl(
+            $user->profile_photo_path
+        );
 
         return response()->json([
             'message' => 'Profile updated successfully',
@@ -150,5 +159,18 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Password berhasil diubah.',
         ], 200);
+    }
+
+    private function resolveProfilePhotoUrl(?string $path): ?string
+    {
+        if (!$path) {
+            return null;
+        }
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        return Storage::disk('s3')->url($path);
     }
 }
