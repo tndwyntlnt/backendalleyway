@@ -11,13 +11,16 @@ class PromoController extends Controller
 {
     public function index()
     {
-        $promos = $promos->map(function ($promo) {
-            $promo->image_url = $promo->image_url
-                ? Storage::disk('s3')->url($promo->image_url)
-                : null;
+        $promos = Promo::where('is_active', true)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($promo) {
+                $promo->image_url = $promo->image_url
+                    ? Storage::disk('s3')->url($promo->image_url)
+                    : null;
 
-            return $promo;
-        });
+                return $promo;
+            });
 
         return response()->json([
             'message' => 'Promos fetched successfully',
