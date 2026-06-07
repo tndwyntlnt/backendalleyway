@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\HomeController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/auth/supabase/exchange', [AuthController::class, 'exchangeSupabaseToken']);
 Route::post('/forgot-password', [PasswordResetController::class, 'forgotPassword']);
 Route::post('/reset-password', [PasswordResetController::class, 'resetPassword']);
 Route::post('/verify-token', [PasswordResetController::class, 'verifyToken']);

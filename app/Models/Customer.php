@@ -17,6 +17,7 @@ class Customer extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'supabase_user_id',
         'name',
         'email',
         'phone_number',
