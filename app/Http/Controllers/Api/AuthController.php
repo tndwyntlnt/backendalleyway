@@ -9,21 +9,36 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:customers',
-            'password' => 'required|string|min:8|confirmed',
-            'phone' => 'nullable|string|max:15', 
-            'birthday' => 'nullable|date',
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('customers', 'email')],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'phone' => ['nullable', 'string', 'max:15', Rule::unique('customers', 'phone_number')],
+            'birthday' => ['nullable', 'date'],
+        ], [
+            'name.required' => 'Nama wajib diisi.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email ini sudah terdaftar.',
+            'password.required' => 'Password wajib diisi.',
+            'password.min' => 'Password minimal 8 karakter.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
+            'phone.unique' => 'Nomor telepon ini sudah terdaftar.',
+            'phone.max' => 'Nomor telepon maksimal 15 karakter.',
+            'birthday.date' => 'Format tanggal lahir tidak valid.',
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json([
+                'message' => 'Data registrasi belum valid.',
+                'errors' => $validator->errors(),
+            ], 422);
         }
 
         $customer = Customer::create([
@@ -91,15 +106,26 @@ class AuthController extends Controller
         $user = $request->user();
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:customers,email,' . $user->id,
-            'phone' => 'nullable|string|max:15', 
-            'birthday' => 'nullable|date',
-            'photo' => 'nullable|image|max:2048',
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', Rule::unique('customers', 'email')->ignore($user->id)],
+            'phone' => ['nullable', 'string', 'max:15', Rule::unique('customers', 'phone_number')->ignore($user->id)],
+            'birthday' => ['nullable', 'date'],
+            'photo' => ['nullable', 'image', 'max:2048'],
+        ], [
+            'name.required' => 'Nama wajib diisi.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email ini sudah digunakan.',
+            'phone.unique' => 'Nomor telepon ini sudah digunakan.',
+            'photo.image' => 'File harus berupa gambar.',
+            'photo.max' => 'Ukuran foto maksimal 2MB.',
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json([
+                'message' => 'Data profil belum valid.',
+                'errors' => $validator->errors(),
+            ], 422);
         }
 
         $path = $user->profile_photo_path;
