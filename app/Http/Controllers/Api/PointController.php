@@ -41,13 +41,14 @@ class PointController extends Controller
                               ->first();
 
                 if ($order->status == 'claimed') {
-                    if ($order->source === 'app' && $order->order_status !== 'completed') {
-                        return response()->json([
-                            'message' => 'Order belum selesai. Poin bisa diklaim setelah pesanan selesai.',
-                        ], 400);
-                    }
                     return response()->json([
                         'message' => 'This code has already been claimed.'
+                    ], 400);
+                }
+
+                if ($order->source === 'app' && $order->order_status !== 'completed') {
+                    return response()->json([
+                        'message' => 'Order belum selesai. Poin bisa diklaim setelah pesanan selesai.',
                     ], 400);
                 }
                 if ($order->customer_id != null && $order->customer_id != $customer->id) {
