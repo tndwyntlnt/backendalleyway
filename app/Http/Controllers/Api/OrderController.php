@@ -28,7 +28,40 @@ class OrderController extends Controller
             ], 422);
         }
 
-        $order = DB::transaction(function () use ($request) {
+        $customer = $request->user();
+
+        Order::where('customer_id', $customer->id)
+            ->where('source', 'app')
+            ->where('order_status', 'pending')
+            ->where('created_at', '<', now()->subMinutes(30))
+            ->update(['order_status' => 'cancelled']);
+
+        $activeOrder = Order::with('orderItems')
+            ->where('customer_id', $customer->id)
+            ->where('source', 'app')
+            ->whereIn('order_status', ['pending', 'ready'])
+            ->latest()
+            ->first();
+
+        if ($activeOrder) {
+            return response()->json([
+                'message' => 'Kamu masih memiliki pesanan aktif. Selesaikan atau tunggu pesanan sebelumnya dibatalkan terlebih dahulu.',
+                'order' => $this->formatOrder($activeOrder),
+            ], 409);
+        }
+
+        $todayOrderCount = Order::where('customer_id', $customer->id)
+            ->where('source', 'app')
+            ->whereDate('created_at', now()->toDateString())
+            ->count();
+
+        if ($todayOrderCount >= 5) {
+            return response()->json([
+                'message' => 'Batas pesanan harian sudah tercapai. Silakan coba lagi besok.',
+            ], 429);
+        }
+
+        $order = DB::transaction(function () use ($request, $customer) {
             $items = collect($request->items);
             $total = 0;
             $preparedItems = [];
@@ -57,7 +90,7 @@ class OrderController extends Controller
 
             $order = Order::create([
                 'transaction_code' => $this->generateTransactionCode(),
-                'customer_id' => $request->user()->id,
+                'customer_id' => $customer->id,
                 'source' => 'app',
                 'order_status' => 'pending',
                 'status' => 'unclaimed',

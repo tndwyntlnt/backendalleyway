@@ -33,7 +33,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/products', [ProductController::class, 'index']);
     Route::get('/products/{product}', [ProductController::class, 'show']);
 
-    Route::post('/orders', [OrderController::class, 'store']);
+    Route::post('/orders', [OrderController::class, 'store'])
+        ->middleware('throttle:3,10');
     Route::get('/orders/my', [OrderController::class, 'myOrders']);
     Route::get('/orders/{order}', [OrderController::class, 'show']);
 });
