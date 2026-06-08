@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\CustomerReward;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Product;
 
 class HomeController extends Controller
 {
@@ -64,10 +65,35 @@ class HomeController extends Controller
             ->take(5)
             ->values();
 
+        $products = Product::with(['activeVariants' => fn ($query) => $query->orderBy('sort_order')])
+            ->where('is_active', true)
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map(function ($product) {
+                $variants = $product->activeVariants
+                    ->map(fn ($variant) => [
+                        'id' => $variant->id,
+                        'name' => $variant->name,
+                        'price' => $variant->price,
+                    ])
+                    ->values();
+
+                return [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'description' => $product->description,
+                    'image_url' => $this->resolveImageUrl($product->image_url),
+                    'starting_price' => $variants->min('price') ?? $product->price,
+                    'variants' => $variants,
+                ];
+            });
+
         return response()->json([
             'message' => 'Home data fetched successfully',
             'customer' => $customer,
             'promos' => $promos,
+            'products' => $products,
             'recent_activities' => $recentActivities,
         ]);
     }

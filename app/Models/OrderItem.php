@@ -14,6 +14,10 @@ class OrderItem extends Model
         'product_id',
         'quantity',
         'price_per_item',
+        'product_variant_id',
+        'product_name',
+        'variant_name',
+        'subtotal',
     ];
 
     public function order()
@@ -24,5 +28,10 @@ class OrderItem extends Model
     public function product()
     {
         return $this->belongsTo(Product::class, 'product_id');
+    }
+
+    public function productVariant()
+    {
+        return $this->belongsTo(ProductVariant::class);
     }
 }

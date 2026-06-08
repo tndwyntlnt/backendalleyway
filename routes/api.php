@@ -8,6 +8,8 @@ use App\Http\Controllers\Api\PromoController;
 use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\OrderController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -28,4 +30,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::post('/change-password', [AuthController::class, 'changePassword']);
     Route::get('/home', [HomeController::class, 'index']);
+    Route::get('/products', [ProductController::class, 'index']);
+    Route::get('/products/{product}', [ProductController::class, 'show']);
+
+    Route::post('/orders', [OrderController::class, 'store']);
+    Route::get('/orders/my', [OrderController::class, 'myOrders']);
+    Route::get('/orders/{order}', [OrderController::class, 'show']);
 });

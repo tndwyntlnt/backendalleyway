@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\OrderResource\Pages\ViewOrder;
 use App\Filament\Resources\OrderResource\RelationManagers;
 use App\Filament\Resources\OrderResource\RelationManagers\OrderItemsRelationManager;
+use App\Models\ProductVariant;
 
 class OrderResource extends Resource
 {
@@ -54,6 +55,31 @@ class OrderResource extends Resource
                                             }
                                         }),
 
+                                        Select::make('product_variant_id')
+                                            ->label('Cup Size')
+                                            ->options(function (Get $get) {
+                                                $productId = $get('product_id');
+
+                                                if (!$productId) {
+                                                    return [];
+                                                }
+
+                                                return ProductVariant::where('product_id', $productId)
+                                                    ->where('is_active', true)
+                                                    ->orderBy('sort_order')
+                                                    ->pluck('name', 'id');
+                                            })
+                                            ->searchable()
+                                            ->required()
+                                            ->reactive()
+                                            ->afterStateUpdated(function ($state, Set $set) {
+                                                $variant = ProductVariant::find($state);
+
+                                                if ($variant) {
+                                                    $set('price_per_item', $variant->price);
+                                                }
+                                            }),
+
                                     TextInput::make('quantity')
                                         ->numeric()
                                         ->required()
@@ -68,7 +94,7 @@ class OrderResource extends Resource
                                         ->disabled() 
                                         ->dehydrated(), 
                                 ])
-                                ->columns(3)
+                                ->columns(4)
                                 ->reactive()
 
                                 ->afterStateUpdated(function (Get $get, Set $set) { 
@@ -120,6 +146,17 @@ class OrderResource extends Resource
                                 ->disabled()
                                 ->dehydrated(),
 
+                            Select::make('order_status')
+                                ->label('Order Status')
+                                ->options([
+                                    'pending' => 'Pending',
+                                    'ready' => 'Ready for Pickup',
+                                    'completed' => 'Completed',
+                                    'cancelled' => 'Cancelled',
+                                ])
+                                ->default('completed')
+                                ->required(),
+
                             Select::make('status')
                                 ->options([
                                     'unclaimed' => 'Unclaimed',
@@ -140,6 +177,17 @@ class OrderResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('transaction_code')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('source')
+                    ->badge(),
+
+                Tables\Columns\TextColumn::make('order_status')
+                    ->badge()
+                    ->colors([
+                        'warning' => 'pending',
+                        'info' => 'ready',
+                        'success' => 'completed',
+                        'danger' => 'cancelled',
+                    ]),
                 Tables\Columns\TextColumn::make('total_amount')
                     ->numeric()
                     ->sortable(),

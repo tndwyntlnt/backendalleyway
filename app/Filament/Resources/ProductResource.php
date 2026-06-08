@@ -22,6 +22,7 @@ use Filament\Forms\Components\Group;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Forms\Components\Repeater;
 
 class ProductResource extends Resource
 {
@@ -41,13 +42,45 @@ class ProductResource extends Resource
                                 ->maxLength(255),
 
                             TextInput::make('price')
+                                ->label('Starting Price')
                                 ->required()
                                 ->numeric()
                                 ->prefix('Rp')
-                                ->helperText('Simpan harga dalam satuan Rupiah (mis: 15000)'),
+                                ->helperText('Harga mulai dari. Untuk harga tiap ukuran, isi di bagian Cup Sizes.'),
 
                             Textarea::make('description')
                                 ->columnSpanFull(),
+
+                            Repeater::make('variants')
+                                ->label('Cup Sizes & Prices')
+                                ->relationship()
+                                ->schema([
+                                    TextInput::make('name')
+                                        ->label('Cup Size')
+                                        ->placeholder('Regular')
+                                        ->required()
+                                        ->maxLength(255),
+
+                                    TextInput::make('price')
+                                        ->label('Price')
+                                        ->required()
+                                        ->numeric()
+                                        ->prefix('Rp'),
+
+                                    TextInput::make('sort_order')
+                                        ->label('Order')
+                                        ->numeric()
+                                        ->default(0),
+
+                                    Toggle::make('is_active')
+                                        ->label('Active')
+                                        ->default(true),
+                                ])
+                                ->columns(4)
+                                ->defaultItems(1)
+                                ->reorderable()
+                                ->collapsible()
+                                ->itemLabel(fn (array $state): ?string => $state['name'] ?? 'Cup Size'),
                         ])
                     ])->columnSpan(2),
 
@@ -84,6 +117,7 @@ class ProductResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('price')
+                    ->label('Starting Price')
                     ->money('IDR')
                     ->sortable(),
 

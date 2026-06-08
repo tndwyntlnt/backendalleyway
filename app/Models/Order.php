@@ -16,6 +16,11 @@ class Order extends Model
         'status',
         'customer_id',
         'claimed_at',
+        'source',
+        'order_status',
+        'ready_at',
+        'completed_at',
+        'customer_note',
     ];
 
     /**
