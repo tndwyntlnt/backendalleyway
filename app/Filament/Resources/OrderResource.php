@@ -48,11 +48,9 @@ class OrderResource extends Resource
                                         ->searchable()
                                         ->required()
                                         ->reactive() 
-                                        ->afterStateUpdated(function ($state, Set $set) {
-                                            $product = Product::find($state);
-                                            if ($product) {
-                                                $set('price_per_item', $product->price);
-                                            }
+                                        ->afterStateUpdated(function (Set $set) {
+                                            $set('product_variant_id', null);
+                                            $set('price_per_item', null);
                                         }),
 
                                         Select::make('product_variant_id')
@@ -85,14 +83,15 @@ class OrderResource extends Resource
                                         ->required()
                                         ->default(1)
                                         ->minValue(1)
-                                        ->reactive(), 
+                                        ->live(),
 
                                     TextInput::make('price_per_item')
                                         ->label('Price per Item')
                                         ->numeric()
                                         ->required()
                                         ->disabled() 
-                                        ->dehydrated(), 
+                                        ->dehydrated()
+                                        ->live(),
                                 ])
                                 ->columns(4)
                                 ->reactive()
