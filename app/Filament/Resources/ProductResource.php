@@ -23,6 +23,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Forms\Components\Repeater;
+use Illuminate\Support\Facades\Storage;
 
 class ProductResource extends Resource
 {
@@ -110,7 +111,19 @@ class ProductResource extends Resource
             ->columns([
                 ImageColumn::make('image_url')
                     ->label('Image')
-                    ->circular(),
+                    ->circular()
+                    ->getStateUsing(function ($record) {
+                        if (! $record->image_url) {
+                            return null;
+                        }
+
+                        if (str_starts_with($record->image_url, 'http://') ||
+                            str_starts_with($record->image_url, 'https://')) {
+                            return $record->image_url;
+                        }
+
+                        return Storage::disk('s3')->url($record->image_url);
+                    }),
 
                 TextColumn::make('name')
                     ->searchable()
