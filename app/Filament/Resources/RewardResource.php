@@ -21,6 +21,8 @@ use Filament\Forms\Components\Group;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Forms\Components\FileUpload;
+use Illuminate\Support\Facades\Storage;
+use Filament\Tables\Columns\ImageColumn;
 
 class RewardResource extends Resource
 {
@@ -74,6 +76,22 @@ class RewardResource extends Resource
     {
         return $table
             ->columns([
+                ImageColumn::make('image_url')
+                    ->label('Image')
+                    ->circular()
+                    ->getStateUsing(function ($record) {
+                        if (! $record->image_url) {
+                            return null;
+                        }
+
+                        if (str_starts_with($record->image_url, 'http://') ||
+                            str_starts_with($record->image_url, 'https://')) {
+                            return $record->image_url;
+                        }
+
+                        return Storage::disk('s3')->url($record->image_url);
+                    }),
+
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),

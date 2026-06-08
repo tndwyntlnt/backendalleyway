@@ -16,6 +16,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
+use Illuminate\Support\Facades\Storage;
 
 class PromoResource extends Resource
 {
@@ -50,7 +51,22 @@ class PromoResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('image_url'),
+                Tables\Columns\ImageColumn::make('image_url')
+                    ->label('Image')
+                    ->height(56)
+                    ->width(90)
+                    ->getStateUsing(function ($record) {
+                        if (! $record->image_url) {
+                            return null;
+                        }
+
+                        if (str_starts_with($record->image_url, 'http://') ||
+                            str_starts_with($record->image_url, 'https://')) {
+                            return $record->image_url;
+                        }
+
+                        return Storage::disk('s3')->url($record->image_url);
+                    }),
                 Tables\Columns\IconColumn::make('is_active')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
