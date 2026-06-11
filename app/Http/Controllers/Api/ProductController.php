@@ -4,21 +4,36 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with(['activeVariants' => fn ($query) => $query->orderBy('sort_order')])
+        $perPage = min($request->integer('per_page', 20), 50);
+
+        $products = Product::with([
+                'activeVariants' => fn ($query) => $query
+                    ->select('id', 'product_id', 'name', 'price', 'sort_order', 'is_active')
+                    ->orderBy('sort_order'),
+            ])
+            ->select('id', 'name', 'description', 'image_url', 'price', 'is_active', 'created_at')
             ->where('is_active', true)
             ->latest()
-            ->get()
-            ->map(fn ($product) => $this->formatProduct($product));
+            ->paginate($perPage);
 
         return response()->json([
             'message' => 'Products fetched successfully',
-            'products' => $products,
+            'products' => $products->getCollection()
+                ->map(fn ($product) => $this->formatProduct($product))
+                ->values(),
+            'meta' => [
+                'current_page' => $products->currentPage(),
+                'last_page' => $products->lastPage(),
+                'per_page' => $products->perPage(),
+                'total' => $products->total(),
+            ],
         ]);
     }
 

@@ -12,6 +12,7 @@ class PromoController extends Controller
     public function index()
     {
         $promos = Promo::where('is_active', true)
+            ->select('id', 'title', 'description', 'image_url', 'is_active', 'created_at')
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(function ($promo) {

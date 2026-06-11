@@ -89,6 +89,7 @@ class PointController extends Controller
     public function listRewards(Request $request)
     {
         $rewards = Reward::where('is_active', true)
+            ->select('id', 'name', 'description', 'points_required', 'image_url', 'is_active', 'created_at')
             ->orderBy('points_required', 'asc')
             ->get()
             ->map(function ($reward) {
