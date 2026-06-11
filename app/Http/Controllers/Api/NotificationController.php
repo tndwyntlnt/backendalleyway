@@ -21,22 +21,40 @@ class NotificationController extends Controller
             ->map(function ($order) {
                 
                 $itemsList = $order->orderItems->map(function ($item) {
-                    $productName = $item->product->name ?? 'Item Dihapus';
-                    return "{$item->quantity}x {$productName}";
-                })->join(', ');
+                    $productName = $item->product_name ?? $item->product->name ?? 'Item Dihapus';
+                    $variantName = $item->variant_name ? " ({$item->variant_name})" : '';
+
+                    return "{$item->quantity}x {$productName}{$variantName}";
+                })->implode(', ');
 
                 $totalRupiah = number_format($order->total_amount, 0, ',', '.');
                 $isClaimed = $order->status === 'claimed';
+                $isAppOrder = $order->source === 'app';
 
                 if ($isClaimed) {
                     $title = 'Struk Pembelian';
                     $message = "Detail: $itemsList.\nTotal: Rp $totalRupiah";
                     $amount = "+{$order->points_earned}";
                     $date = $order->claimed_at;
+                } elseif ($isAppOrder && $order->order_status === 'cancelled') {
+                    $title = 'Pesanan Dibatalkan';
+                    $message = "Pesanan {$order->transaction_code} telah dibatalkan.";
+                    $amount = 'Cancelled';
+                    $date = $order->updated_at;
+                } elseif ($isAppOrder && $order->order_status === 'ready') {
+                    $title = 'Pesanan Siap Diambil';
+                    $message = "Kode Transaksi: {$order->transaction_code}\nSilakan ambil pesanan di toko.";
+                    $amount = 'Ready';
+                    $date = $order->updated_at;
+                } elseif ($isAppOrder && $order->order_status === 'completed') {
+                    $title = 'Pesanan Selesai';
+                    $message = "Kode Transaksi: {$order->transaction_code}\nSilakan redeem kode ini untuk mendapatkan poin.";
+                    $amount = 'Klaim Poin';
+                    $date = $order->updated_at;
                 } else {
                     $title = 'Menunggu Klaim';
-                    $message = "Kode Transaksi: {$order->transaction_code}\nSilakan 'Redeem' kode ini untuk mendapatkan poin.";
-                    $amount = "Pending"; 
+                    $message = "Kode Transaksi: {$order->transaction_code}\nSilakan redeem kode ini untuk mendapatkan poin.";
+                    $amount = 'Pending';
                     $date = $order->created_at;
                 }
 
@@ -44,6 +62,7 @@ class NotificationController extends Controller
                     'id' => 'order_' . $order->id,
                     'type' => 'earn', 
                     'status' => $order->status,
+                    'order_status' => $order->order_status,
                     'title' => $title,
                     'message' => $message,
                     'date' => $date,

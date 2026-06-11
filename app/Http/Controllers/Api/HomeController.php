@@ -37,9 +37,20 @@ class HomeController extends Controller
                 return [
                     'id' => 'order_' . $order->id,
                     'type' => 'earn',
-                    'title' => $order->status === 'claimed' ? 'Struk Pembelian' : 'Menunggu Klaim',
-                    'date' => $order->status === 'claimed' ? $order->claimed_at : $order->created_at,
-                    'amount' => $order->status === 'claimed' ? "+{$order->points_earned}" : 'Pending',
+                    'title' => $order->order_status === 'cancelled'
+                        ? 'Pesanan Dibatalkan'
+                        : ($order->order_status === 'completed' && $order->status !== 'claimed'
+                            ? 'Pesanan Selesai'
+                            : ($order->status === 'claimed' ? 'Struk Pembelian' : 'Menunggu Klaim')),
+                    'date' => $order->status === 'claimed' ? $order->claimed_at : $order->updated_at,
+                    'amount' => $order->order_status === 'cancelled'
+                        ? 'Cancelled'
+                        : ($order->order_status === 'ready'
+                            ? 'Ready'
+                            : ($order->order_status === 'completed' && $order->status !== 'claimed'
+                                ? 'Klaim Poin'
+                                : ($order->status === 'claimed' ? "+{$order->points_earned}" : 'Pending'))),
+                    'order_status' => $order->order_status,
                 ];
             });
 
