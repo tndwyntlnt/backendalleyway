@@ -100,7 +100,7 @@ class PointController extends Controller
         return response()->json([
             'message' => 'Rewards fetched successfully',
             'rewards' => $rewards
-        ], 200);
+        ], 200)->header('Cache-Control', 'private, max-age=60');
     }
 
     public function redeemReward(Request $request)

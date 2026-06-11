@@ -12,11 +12,13 @@ class NotificationController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
+        $limit = min($request->integer('limit', 30), 100);
 
         $orders = Order::with('orderItems.product')
             ->where('customer_id', $user->id)
             ->whereIn('status', ['claimed', 'unclaimed'])
             ->orderBy('created_at', 'desc') 
+            ->take($limit)
             ->get()
             ->map(function ($order) {
                 
@@ -73,6 +75,7 @@ class NotificationController extends Controller
         $rewards = CustomerReward::with('reward')
             ->where('customer_id', $user->id)
             ->orderBy('created_at', 'desc')
+            ->take($limit)
             ->get()
             ->map(function ($item) {
                 $rewardName = $item->reward->name ?? 'Unknown Item';
@@ -90,11 +93,18 @@ class NotificationController extends Controller
 
         $notifications = $orders->merge($rewards);
 
-        $sortedNotifications = $notifications->sortByDesc('date')->values();
+        $sortedNotifications = $notifications
+            ->sortByDesc('date')
+            ->take($limit)
+            ->values();
 
         return response()->json([
             'message' => 'Notifications fetched successfully',
-            'data' => $sortedNotifications
+            'data' => $sortedNotifications,
+            'meta' => [
+                'limit' => $limit,
+                'count' => $sortedNotifications->count(),
+            ],
         ], 200);
     }
 }

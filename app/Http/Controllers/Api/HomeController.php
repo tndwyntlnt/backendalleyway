@@ -16,7 +16,17 @@ class HomeController extends Controller
     {
         $customer = $request->user();
 
-        $customer->profile_photo_path = $this->resolveImageUrl($customer->profile_photo_path);
+        $customerPayload = [
+            'id' => $customer->id,
+            'name' => $customer->name,
+            'email' => $customer->email,
+            'phone_number' => $customer->phone_number,
+            'birthday' => $customer->birthday,
+            'member_code' => $customer->member_code,
+            'points_balance' => $customer->points_balance,
+            'member_status' => $customer->member_status,
+            'profile_photo_path' => $this->resolveImageUrl($customer->profile_photo_path),
+        ];
 
         $promos = Promo::where('is_active', true)
             ->select('id', 'title', 'description', 'image_url')
@@ -76,7 +86,12 @@ class HomeController extends Controller
             ->take(5)
             ->values();
 
-        $products = Product::with(['activeVariants' => fn ($query) => $query->orderBy('sort_order')])
+        $products = Product::with([
+                'activeVariants' => fn ($query) => $query
+                    ->select('id', 'product_id', 'name', 'price', 'sort_order', 'is_active')
+                    ->orderBy('sort_order'),
+            ])
+            ->select('id', 'name', 'description', 'image_url', 'price', 'is_active', 'created_at')
             ->where('is_active', true)
             ->latest()
             ->take(5)
@@ -102,7 +117,7 @@ class HomeController extends Controller
 
         return response()->json([
             'message' => 'Home data fetched successfully',
-            'customer' => $customer,
+            'customer' => $customerPayload,
             'promos' => $promos,
             'products' => $products,
             'recent_activities' => $recentActivities,

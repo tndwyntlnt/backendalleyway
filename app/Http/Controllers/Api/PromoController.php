@@ -26,6 +26,6 @@ class PromoController extends Controller
         return response()->json([
             'message' => 'Promos fetched successfully',
             'promos' => $promos
-        ], 200);
+        ], 200)->header('Cache-Control', 'private, max-age=60');
     }
 }

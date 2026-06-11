@@ -34,7 +34,7 @@ class ProductController extends Controller
                 'per_page' => $products->perPage(),
                 'total' => $products->total(),
             ],
-        ]);
+        ])->header('Cache-Control', 'private, max-age=60');
     }
 
     public function show(Product $product)
