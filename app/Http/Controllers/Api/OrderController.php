@@ -19,11 +19,22 @@ class OrderController extends Controller
             'items.*.product_variant_id' => ['required', 'integer', 'exists:product_variants,id'],
             'items.*.quantity' => ['required', 'integer', 'min:1', 'max:20'],
             'customer_note' => ['nullable', 'string', 'max:500'],
+        ], [
+            'items.required' => 'Pesanan belum memiliki item.',
+            'items.array' => 'Format pesanan tidak valid.',
+            'items.min' => 'Pesanan minimal memiliki 1 item.',
+            'items.*.product_variant_id.required' => 'Ukuran produk belum dipilih.',
+            'items.*.product_variant_id.integer' => 'Ukuran produk tidak valid.',
+            'items.*.product_variant_id.exists' => 'Produk atau ukuran yang dipilih sudah tidak tersedia. Silakan refresh menu.',
+            'items.*.quantity.required' => 'Jumlah produk belum dipilih.',
+            'items.*.quantity.integer' => 'Jumlah produk tidak valid.',
+            'items.*.quantity.min' => 'Jumlah produk minimal 1.',
+            'items.*.quantity.max' => 'Jumlah produk terlalu banyak.',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'message' => 'Data order belum valid.',
+                'message' => $validator->errors()->first() ?? 'Data order belum valid.',
                 'errors' => $validator->errors(),
             ], 422);
         }
