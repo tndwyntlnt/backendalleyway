@@ -93,7 +93,7 @@ class HomeController extends Controller
             ])
             ->select('id', 'name', 'description', 'image_url', 'price', 'is_active', 'created_at')
             ->where('is_active', true)
-            ->isRandomOrder()
+            ->inRandomOrder()
             ->take(5)
             ->get()
             ->map(function ($product) {
